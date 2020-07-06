@@ -1,10 +1,6 @@
-from os import truncate
 import math
-
-import itertools
 import numpy as np
 import pandas as pd
-from itertools import chain
 from collections import Counter
 from Levenshtein import distance as levenshtein_distance
 

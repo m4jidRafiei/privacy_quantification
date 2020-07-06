@@ -251,7 +251,6 @@ class SMS: #Set-Multiset-Sequence calculator
                         sum_ent += ent / max_ent
                         ent_list.append(ent / max_ent)
                     elif sum == 1:
-                        # sum_ent += 1
                         unique_match = True
                 else:
                     zeros += 1
@@ -269,8 +268,14 @@ class SMS: #Set-Multiset-Sequence calculator
                 else:
                     ad = 1 - sum_ent / (len(cand_set) - zeros)
             elif measurement_type == "worst_case":
-                cd = max(matches_list)
-                ad = 1 - min(ent_list)
+                if len(matches_list) != 0:
+                    cd = max(matches_list)
+                else:
+                    cd = 0
+                if len(ent_list) != 0:
+                    ad = 1 - min(ent_list)
+                else:
+                    ad = 0
 
             print("Set ---len %d---cd %0.3f---ad %0.3f" % (bk_length, cd, ad))
             f.write("set,len,%d,cd,%0.3f,ad,%0.3f\n" % (bk_length, cd, ad))
@@ -306,8 +311,14 @@ class SMS: #Set-Multiset-Sequence calculator
                 else:
                     ad = 1 - sum_ent / (len_mult - zeros)
             elif measurement_type == "worst_case":
-                cd = max(matches_list)
-                ad = 1 - min(ent_list)
+                if len(matches_list) != 0:
+                    cd = max(matches_list)
+                else:
+                    cd = 0
+                if len(ent_list) != 0:
+                    ad = 1 - min(ent_list)
+                else:
+                    ad = 0
 
             print("Mul ---len %d---cd %0.3f---ad %0.3f" % (bk_length, cd, ad))
             f.write("mult,len,%d,cd,%0.3f,ad,%0.3f\n" % (bk_length, cd, ad))
@@ -346,8 +357,14 @@ class SMS: #Set-Multiset-Sequence calculator
                 else:
                     ad = 1 - sum_ent / ((index + 1) - zeros)
             elif measurement_type == "worst_case":
-                cd = max(matches_list)
-                ad = 1 - min(ent_list)
+                if len(matches_list) != 0:
+                    cd = max(matches_list)
+                else:
+                    cd = 0
+                if len(ent_list) != 0:
+                    ad = 1 - min(ent_list)
+                else:
+                    ad = 0
             print("Seq ---len %d---cd %0.3f---ad %0.3f \n" % (bk_length, cd, ad))
             f.write("seq,len,%d,cd,%0.3f,ad,%0.3f\n" % (bk_length, cd, ad))
             f.close()
