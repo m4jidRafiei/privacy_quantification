@@ -217,7 +217,7 @@ class SMS: #Set-Multiset-Sequence calculator
 
         sum_uniq = 0
         cd = 0
-        ad = 0
+        td = 0
         zeros = 0
         sum = 0
         sum_ent = 0
@@ -260,25 +260,25 @@ class SMS: #Set-Multiset-Sequence calculator
                 else:
                     cd = sum_uniq / (len(cand_set) - zeros)
                 if sum_ent == 0 and unique_match:
-                    ad = 1
+                    td = 1
                 elif (len(cand_set) - zeros) == 0:
-                    ad = 0
+                    td = 0
                 elif len(cand_set) == 0:
-                    ad = 0
+                    td = 0
                 else:
-                    ad = 1 - sum_ent / (len(cand_set) - zeros)
+                    td = 1 - sum_ent / (len(cand_set) - zeros)
             elif measurement_type == "worst_case":
                 if len(matches_list) != 0:
                     cd = max(matches_list)
                 else:
                     cd = 0
                 if len(ent_list) != 0:
-                    ad = 1 - min(ent_list)
+                    td = 1 - min(ent_list)
                 else:
-                    ad = 0
+                    td = 0
 
-            print("Set ---len %d---cd %0.3f---ad %0.3f" % (bk_length, cd, ad))
-            f.write("set,len,%d,cd,%0.3f,ad,%0.3f\n" % (bk_length, cd, ad))
+            print("Set ---len %d---cd %0.3f---td %0.3f" % (bk_length, cd, td))
+            f.write("set,len,%d,cd,%0.3f,td,%0.3f\n" % (bk_length, cd, td))
             f.close()
 
         elif bk_type == "mult":
@@ -303,25 +303,25 @@ class SMS: #Set-Multiset-Sequence calculator
                 else:
                     cd = sum_uniq / (len_mult - zeros)
                 if sum_ent == 0 and unique_match:
-                    ad = 1
+                    td = 1
                 elif (len_mult - zeros) == 0:
-                    ad = 0
+                    td = 0
                 elif len_mult == 0:
-                    ad = 0
+                    td = 0
                 else:
-                    ad = 1 - sum_ent / (len_mult - zeros)
+                    td = 1 - sum_ent / (len_mult - zeros)
             elif measurement_type == "worst_case":
                 if len(matches_list) != 0:
                     cd = max(matches_list)
                 else:
                     cd = 0
                 if len(ent_list) != 0:
-                    ad = 1 - min(ent_list)
+                    td = 1 - min(ent_list)
                 else:
-                    ad = 0
+                    td = 0
 
-            print("Mul ---len %d---cd %0.3f---ad %0.3f" % (bk_length, cd, ad))
-            f.write("mult,len,%d,cd,%0.3f,ad,%0.3f\n" % (bk_length, cd, ad))
+            print("Mul ---len %d---cd %0.3f---td %0.3f" % (bk_length, cd, td))
+            f.write("mult,len,%d,cd,%0.3f,td,%0.3f\n" % (bk_length, cd, td))
             f.close()
 
 
@@ -349,23 +349,23 @@ class SMS: #Set-Multiset-Sequence calculator
                 else:
                     cd = sum_uniq / ((index + 1) - zeros)
                 if sum_ent == 0 and unique_match:
-                    ad = 1
+                    td = 1
                 elif not in_loop:
-                    ad = 0
+                    td = 0
                 elif ((index + 1) - zeros) == 0:
-                    ad = 0
+                    td = 0
                 else:
-                    ad = 1 - sum_ent / ((index + 1) - zeros)
+                    td = 1 - sum_ent / ((index + 1) - zeros)
             elif measurement_type == "worst_case":
                 if len(matches_list) != 0:
                     cd = max(matches_list)
                 else:
                     cd = 0
                 if len(ent_list) != 0:
-                    ad = 1 - min(ent_list)
+                    td = 1 - min(ent_list)
                 else:
-                    ad = 0
-            print("Seq ---len %d---cd %0.3f---ad %0.3f \n" % (bk_length, cd, ad))
-            f.write("seq,len,%d,cd,%0.3f,ad,%0.3f\n" % (bk_length, cd, ad))
+                    td = 0
+            print("Seq ---len %d---cd %0.3f---td %0.3f \n" % (bk_length, cd, td))
+            f.write("seq,len,%d,cd,%0.3f,td,%0.3f\n" % (bk_length, cd, td))
             f.close()
 
