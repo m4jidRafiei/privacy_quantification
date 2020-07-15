@@ -3,6 +3,7 @@ import numpy as np
 import pandas as pd
 from collections import Counter
 from Levenshtein import distance as levenshtein_distance
+from pyemd import emd, emd_with_flow
 
 
 class EMD:
@@ -14,14 +15,16 @@ class EMD:
         sum_seq = 0
         tuple_list = map(tuple, simple_log)
         c = Counter(tuple_list)
-        return self.relative_freq(c)
+        return self.relative_freq(c, len(c.items()))
 
-    def relative_freq(self,counter):
+    def relative_freq(self,counter, n):
+        only_freq = np.zeros(n)
         total_count = sum(counter.values())
         relative = {}
-        for key in counter:
+        for index, key in enumerate(counter):
             relative[key] = round(counter[key] / total_count, 4)
-        return relative
+            only_freq[index] = round(counter[key] / total_count, 4)
+        return relative,only_freq
 
     def distance_array(self,log1,log2):
         array = np.zeros(shape=(len(log1), len(log2)))
@@ -32,12 +35,12 @@ class EMD:
                 dist_01 = levenshtein_distance(str1,str2)/max(len(str1), len(str2))
                 array[index1][index2] = round(dist_01,4)
                 # array[index1][index2] = 10
-                print(index1)
 
         df = pd.DataFrame(array, [''.join(item[0])+":"+str(item[1]) for item in log1.items()], [''.join(item[0])+":"+str(item[1]) for item in log2.items()])
         return df,array
 
-    def emd_distance(self, log_freq_1, log_freq_2, distance_df):
+    def emd_distance(self, log_freq_1, log_freq_2):
+        distance_df, array = self.distance_array(log_freq_1, log_freq_2)
         cost = 0
         for ind, item in enumerate(log_freq_1.items()):
             freq = item[1]
@@ -56,6 +59,24 @@ class EMD:
                 row = row.drop(labels=[min_col])
                 min_col = row.idxmin()
         return self.truncate(cost,3)
+
+
+    def emd_distance_pyemd(self,log_only_freq_1,log_only_freq_2,log_freq_1,log_freq_2):
+        if len(log_only_freq_2) < len(log_only_freq_1):
+            diff = len(log_only_freq_1) - len(log_only_freq_2)
+            for i in range(diff):
+                fake_str = 'a' + str(i)
+                log_freq_2[tuple(fake_str)] = 0
+                log_only_freq_2 = np.append(log_only_freq_2, 0)
+        elif len(log_only_freq_1) < len(log_only_freq_2):
+            diff = len(log_only_freq_2) - len(log_only_freq_1)
+            for i in range(diff):
+                fake_str = 'a' + str(i)
+                log_freq_1[tuple(fake_str)] = 0
+                log_only_freq_1 = np.append(log_only_freq_2, 0)
+        distance_df, array = self.distance_array(log_freq_1, log_freq_2)
+        cost_lp = emd(log_only_freq_1, log_only_freq_2, array)
+        return cost_lp
 
 
     def truncate(self,number, digits):

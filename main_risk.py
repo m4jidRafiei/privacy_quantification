@@ -23,12 +23,6 @@ file_name =  event_log[0:-4]+"_1"+".csv"
 
 min_len = min(len(uniq_act),8)
 for i in range(1,min_len+1):
-
     sms.disclosure_calc("set",uniq_act,measurement_type,file_name, i, existence_based,simple_log,multiset_log)
     sms.disclosure_calc("mult", uniq_act, measurement_type, file_name, i, existence_based, simple_log, multiset_log)
     sms.disclosure_calc("seq", uniq_act, measurement_type, file_name, i, existence_based, simple_log, multiset_log)
-
-
-print("--- %s seconds ---" % (time.time() - start_time))
-
-
