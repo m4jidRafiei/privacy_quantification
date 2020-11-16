@@ -29,6 +29,7 @@ class EMD:
     def distance_array(self,log1,log2):
         array = np.zeros(shape=(len(log1), len(log2)))
         for index1,trace1 in enumerate(log1):
+            print("variant: " + str(index1))
             for index2,trace2 in enumerate(log2):
                 str1 = ''.join(trace1)
                 str2 = ''.join(trace2)
@@ -62,19 +63,27 @@ class EMD:
 
 
     def emd_distance_pyemd(self,log_only_freq_1,log_only_freq_2,log_freq_1,log_freq_2):
+        checked = False
         if len(log_only_freq_2) < len(log_only_freq_1):
+            checked = True
             diff = len(log_only_freq_1) - len(log_only_freq_2)
             for i in range(diff):
                 fake_str = 'a' + str(i)
                 log_freq_2[tuple(fake_str)] = 0
                 log_only_freq_2 = np.append(log_only_freq_2, 0)
-        elif len(log_only_freq_1) < len(log_only_freq_2):
+        elif len(log_only_freq_1) < len(log_only_freq_2) and not checked:
             diff = len(log_only_freq_2) - len(log_only_freq_1)
             for i in range(diff):
                 fake_str = 'a' + str(i)
                 log_freq_1[tuple(fake_str)] = 0
-                log_only_freq_1 = np.append(log_only_freq_2, 0)
+                log_only_freq_1 = np.append(log_only_freq_1, 0)
         distance_df, array = self.distance_array(log_freq_1, log_freq_2)
+        # if len(log_only_freq_1) > array.shape[0]:
+        #     len(log_only_freq_1).pop()
+        #     log_freq_1.pop()
+        # if len(log_only_freq_2) > array.shape[1]:
+        #     len(log_only_freq_2).pop()
+        #     log_freq_2.pop()
         cost_lp = emd(log_only_freq_1, log_only_freq_2, array)
         return cost_lp
 

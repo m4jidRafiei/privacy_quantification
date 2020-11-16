@@ -4,6 +4,7 @@ from itertools import chain
 from collections import Counter
 import pyfpgrowth
 from multiset import Multiset
+import copy
 
 #get_occurances_... are faster than get_occurances_matches_...
 #because similar elements are packed in one and counted by Counter
@@ -32,11 +33,123 @@ class SMS: #Set-Multiset-Sequence calculator
 
         return simple_log
 
+    def get_unique_act(self, iter):
+        act_list = chain.from_iterable(iter)
+        return set(act_list)
+
+    def map_act_char(self, traces):
+        uniq_act = self.get_unique_act(traces)
+        map_dict_act_chr = {}
+        map_dict_chr_act = {}
+        for index, item in enumerate(uniq_act):
+            map_dict_act_chr[item] = chr(index)
+            map_dict_chr_act[chr(index)] = item
+
+        return map_dict_act_chr, map_dict_chr_act
+
+    def convert_act_to_char(self, trace, map_dict_act_chr):
+        trace_str = ""
+        for item in trace:
+            try:
+                trace_str += map_dict_act_chr[item]
+            except KeyError:
+                map_dict_act_chr[item] = chr(len(map_dict_act_chr))
+                trace_str += map_dict_act_chr[item]
+        return trace_str
+
+    def convert_char_to_act(self, trace, map_dict_chr_act):
+        trace_act = []
+        for item in trace:
+            trace_act.append(map_dict_chr_act[item])
+        return trace_act
+
+    def convert_simple_log_act_to_char(self, simple_log, map_dict_act_chr):
+        simple_log_char = []
+        for trace in simple_log:
+            trace_string = self.convert_act_to_char(trace, map_dict_act_chr)
+            simple_log_char.append(trace_string)
+        return simple_log_char
+
+    def convert_simple_log_char_to_act(self, simple_log, map_dict_chr_act):
+        simple_log_act = []
+        for trace in simple_log:
+            trace_act = self.convert_char_to_act(trace, map_dict_chr_act)
+            simple_log_act.append(trace_act)
+        return simple_log_act
+
+    def create_simple_log_adv(self,log, trace_attributes, life_cycle, all_life_cycle, sensitive_attributes, time_info ,time_accuracy):
+        # If time_based is true then the background knowledge type have to be sequence
+        time_prefix = ['time:timestamp']
+        life_cycle_prefix = ['lifecycle:transition']
+        logsimple = {}
+        traces = []
+        sensitives = {el: [] for el in sensitive_attributes}
+
+        for case_index, case in enumerate(log):
+            trace, sens = self.create_trace(case, trace_attributes, life_cycle, all_life_cycle, life_cycle_prefix,
+                                            time_prefix, time_info, sensitive_attributes, time_accuracy)
+            logsimple[case.attributes["concept:name"]] = {"trace": tuple(trace), "sensitive": sens}
+            traces.append(tuple(trace))
+            # sample all values for a specific sensitive attribute (key) in dict
+            for key in sens.keys():
+                # sample all values for a specific sensitive attribute (key) in dict
+                sensitives[key].append(sens[key])
+
+        return logsimple, traces, sensitives
+
+
+    def create_trace(self, case, trace_attributes, life_cycle, all_life_cycle, life_cycle_prefix, time_prefix,time_info,sensitive_attributes,time_accuracy):
+        sens = {}
+        trace = []
+        for event_index, event in enumerate(case):
+            simple_attr_temp = []
+            life_cycle_value = ''
+            event_dict = {}
+            for key, value in event.items():
+                if time_info and key in time_prefix:
+                    if event_index == 0:
+                        starttime = value
+                        time = 0
+                    else:
+                        if time_accuracy == "seconds":
+                            time = (value - starttime).total_seconds()
+                        elif time_accuracy == "minutes":
+                            time = (value.replace(second=0, microsecond=0)
+                                    - starttime.replace(second=0, microsecond=0)).total_seconds() / 60
+                        elif time_accuracy == "hours":
+                            time = (value.replace(minute=0, second=0, microsecond=0)
+                                    - starttime.replace(minute=0, second=0, microsecond=0)).total_seconds() / 360
+                        elif time_accuracy == "days":
+                            time = (value.replace(hour=0, minute=0, second=0, microsecond=0)
+                                    - starttime.replace(hour=0, minute=0, second=0,
+                                                        microsecond=0)).total_seconds() \
+                                   / 8640
+
+                if key in trace_attributes:
+                    event_dict[key] = value
+                if key in sensitive_attributes:
+                    sens[key] = value
+                if key in life_cycle_prefix:
+                    life_cycle_value = value
+            if all_life_cycle or (life_cycle_value in life_cycle):
+                if len(event_dict) < 2:
+                    simple_event = list(event_dict.values())[0]
+                else:
+                    for att in trace_attributes:
+                        if att in event_dict:
+                            simple_attr_temp.append(event_dict[att])
+                    simple_event = tuple(simple_attr_temp)
+                trace.append(simple_event)
+
+        return trace, sens
+
+
+
     def set_simple_log(self,simple_log):
         self.simple_log = simple_log
 
 
-    def get_unique_act(self,iter):
+    def get_unique_elem(self,iter):
         act_list = chain.from_iterable(iter)
         return set(act_list)
 
