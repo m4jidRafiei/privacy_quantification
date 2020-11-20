@@ -1,23 +1,23 @@
-from SMS import SMS
+from p_privacy_qt.SMS import SMS
 from pm4py.objects.log.importer.xes import factory as xes_importer_factory
 import time
-from EMD import EMD
+from p_privacy_qt.EMD import EMD
 
 # simple_log = (['a','a','c'], ['a','b','c'], ['a', 'a', 'a', 'a', 'c', 'b'], ['d','b','c'], ['a', 'a', 'b', 'd'],['a', 'a', 'd', 'b'])
 
 sensitive = []
 time_accuracy = "minutes"
 time_info = False
-trace_attributes = ['concept:name','org:resource']
+trace_attributes = ['concept:name']
 #these life cycles are applied only when all_lif_cycle = False
 life_cycle = ['complete', '', 'COMPLETE']
 #when life cycle is in trace attributes then all_life_cycle has to be True
 all_life_cycle = True # True will ignore the transitions specified in life_cycle
 
 original_event_log = "./event_logs/" + "BPI_Challenge_2012_APP.xes"
-original_log = xes_importer_factory.apply(original_event_log)
+privacy_aware_log = "./event_logs/"+ "BPI_Challenge_2012_APP anon relative.xes"
 
-privacy_aware_log = "./event_logs/"+ "BPI_Challenge_2012_APP_anon_minutes_2_20_1_0.8_set.xes"
+original_log = xes_importer_factory.apply(original_event_log)
 privacy_log = xes_importer_factory.apply(privacy_aware_log)
 
 sms = SMS()

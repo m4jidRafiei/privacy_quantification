@@ -1,0 +1,29 @@
+Metadata-Version: 2.1
+Name: p-privacy-qt
+Version: 0.0.2
+Summary: Quantifying privacy in process mining
+Home-page: https://github.com/m4jidRafiei/privacy_quantification
+Author: Majid Rafiei
+Author-email: majid.rafiei@pads.rwth-aachen.de
+License: UNKNOWN
+Project-URL: Source, https://github.com/m4jidRafiei/privacy_quantification
+Description: ### Introduction
+        This Project implements privacy quantification in process mining.
+        
+        ## Python package
+        The implementation has been published as a standard Python package. Use the following command to install the corresponding Python package:
+        
+        ```shell
+        pip install p-privacy-qt
+        ```
+        
+        ### Usage
+        Check the main files in the root directory to see the usage.
+        
+        
+        
+Platform: UNKNOWN
+Classifier: Programming Language :: Python :: 3
+Classifier: License :: OSI Approved :: GNU General Public License v3 (GPLv3)
+Classifier: Operating System :: OS Independent
+Description-Content-Type: text/markdown
