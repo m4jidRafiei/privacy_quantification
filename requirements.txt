@@ -3,5 +3,5 @@ pm4py==1.2.10
 pandas==0.24.2
 pyemd==0.5.1
 pyfpgrowth==1.0
-numpy==1.18.2
+numpy==1.18.1
 python_Levenshtein==0.12.0

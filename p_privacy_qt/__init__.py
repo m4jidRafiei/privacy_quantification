@@ -1,7 +1,7 @@
 from p_privacy_qt import SMS, EMD
 
 __name__ = 'p_privacy_qt'
-__version__ = '0.0.2'
+__version__ = '0.0.3'
 __doc__ = "Quantifying Privacy in Process Mining"
 __author__ = 'Majid Rafiei'
 __author_email__ = 'majid.rafiei@pads.rwth-aachen.de'
