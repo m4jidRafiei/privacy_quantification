@@ -77,8 +77,8 @@ class SMS: #Set-Multiset-Sequence calculator
             simple_log_act.append(trace_act)
         return simple_log_act
 
-    def create_simple_log_adv(self,log, trace_attributes, life_cycle, all_life_cycle, sensitive_attributes, time_info ,time_accuracy):
-        time_prefix = ['time:timestamp']
+    def create_simple_log_adv(self,log, trace_attributes, life_cycle, all_life_cycle, sensitive_attributes ,time_accuracy):
+        # time_prefix = ['time:timestamp']
         life_cycle_prefix = ['lifecycle:transition']
         logsimple = {}
         traces = []
@@ -86,7 +86,7 @@ class SMS: #Set-Multiset-Sequence calculator
 
         for case_index, case in enumerate(log):
             trace, sens = self.create_trace(case, trace_attributes, life_cycle, all_life_cycle, life_cycle_prefix,
-                                            time_prefix, time_info, sensitive_attributes, time_accuracy)
+                                         sensitive_attributes, time_accuracy)
             logsimple[case.attributes["concept:name"]] = {"trace": tuple(trace), "sensitive": sens}
             traces.append(tuple(trace))
             # sample all values for a specific sensitive attribute (key) in dict
@@ -97,7 +97,7 @@ class SMS: #Set-Multiset-Sequence calculator
         return logsimple, traces, sensitives
 
 
-    def create_trace(self, case, trace_attributes, life_cycle, all_life_cycle, life_cycle_prefix, time_prefix,time_info,sensitive_attributes,time_accuracy):
+    def create_trace(self, case, trace_attributes, life_cycle, all_life_cycle, life_cycle_prefix,sensitive_attributes,time_accuracy):
         sens = {}
         trace = []
         for event_index, event in enumerate(case):
@@ -105,26 +105,21 @@ class SMS: #Set-Multiset-Sequence calculator
             life_cycle_value = ''
             event_dict = {}
             for key, value in event.items():
-                if time_info and key in time_prefix:
-                    if event_index == 0:
-                        starttime = value
-                        time = 0
+                if 'time:timestamp' in trace_attributes and key =='time:timestamp':
+                    if time_accuracy == 'original':
+                        time = value
                     else:
                         if time_accuracy == "seconds":
-                            time = (value - starttime).total_seconds()
+                            time = value.replace(microsecond=0)
                         elif time_accuracy == "minutes":
-                            time = (value.replace(second=0, microsecond=0)
-                                    - starttime.replace(second=0, microsecond=0)).total_seconds() / 60
+                            time = value.replace(second=0, microsecond=0)
                         elif time_accuracy == "hours":
-                            time = (value.replace(minute=0, second=0, microsecond=0)
-                                    - starttime.replace(minute=0, second=0, microsecond=0)).total_seconds() / 360
+                            time = value.replace(minute=0, second=0, microsecond=0)
                         elif time_accuracy == "days":
-                            time = (value.replace(hour=0, minute=0, second=0, microsecond=0)
-                                    - starttime.replace(hour=0, minute=0, second=0,
-                                                        microsecond=0)).total_seconds() \
-                                   / 8640
+                            time = value.replace(hour=0, minute=0, second=0, microsecond=0)
+                    event_dict[key] = time
 
-                if key in trace_attributes:
+                if key in trace_attributes and key !='time:timestamp':
                     event_dict[key] = value
                 if key in sensitive_attributes:
                     sens[key] = value
@@ -339,12 +334,12 @@ class SMS: #Set-Multiset-Sequence calculator
         matches_list =[]
         ent_list = []
 
-        if (bk_type == "mult" or bk_type=="seq") and existence_based:
+        if (bk_type == "multiset" or bk_type=="sequence") and existence_based:
             cand_seq = self.get_sub_seq(simple_log, bk_length)
             cand_multiset = self.get_multiset_log_n(cand_seq)
             len_mult = len(cand_multiset)
 
-        elif (bk_type == "mult" or bk_type=="seq") and not existence_based:
+        elif (bk_type == "multiset" or bk_type=="sequence") and not existence_based:
             cand_seq = itertools.product(uniq_act, repeat=bk_length)
             seq_mult = itertools.product(uniq_act, repeat=bk_length)
             cand_multiset = self.get_multiset_log_n(seq_mult)
@@ -392,9 +387,7 @@ class SMS: #Set-Multiset-Sequence calculator
             f.write("set,len,%d,cd,%0.3f,td,%0.3f\n" % (bk_length, cd, td))
             f.close()
 
-            return cd, td
-
-        elif bk_type == "mult":
+        elif bk_type == "multiset":
             for counter, sub_mult in enumerate(cand_multiset):
                 print("len %d --> in mult %d of %d" % (bk_length, counter, len_mult))
                 sum, matches = self.get_occurances_matches_multiset_n(multiset_log, sub_mult)
@@ -433,12 +426,11 @@ class SMS: #Set-Multiset-Sequence calculator
                 else:
                     td = 0
 
-            print("Mul ---len %d---cd %0.3f---td %0.3f" % (bk_length, cd, td))
             f.write("mult,len,%d,cd,%0.3f,td,%0.3f\n" % (bk_length, cd, td))
             f.close()
 
 
-        elif bk_type == "seq":
+        elif bk_type == "sequence":
             in_loop = False
             for index, sub_seq in enumerate(cand_seq):
                 print("len %d --> in seq %d of %d" % (bk_length, index, len_mult))
@@ -478,7 +470,8 @@ class SMS: #Set-Multiset-Sequence calculator
                     td = 1 - min(ent_list)
                 else:
                     td = 0
-            print("Seq ---len %d---cd %0.3f---td %0.3f \n" % (bk_length, cd, td))
+
             f.write("seq,len,%d,cd,%0.3f,td,%0.3f\n" % (bk_length, cd, td))
             f.close()
 
+        return cd, td
