@@ -36,10 +36,9 @@ multiset_log = sms.get_multiset_log_n(simple_log_char_1)
 uniq_act = sms.get_unique_elem(simple_log_char_1)
 
 start_time = time.time()
-results_file_name =  event_log[0:-4]+".csv"
 
 # min_len = min(len(uniq_act),3)
 
-cd, td = sms.disclosure_calc(bk_type,uniq_act,measurement_type,results_file_name, bk_length, existence_based,simple_log_char_1,multiset_log)
+cd, td = sms.disclosure_calc(bk_type,uniq_act,measurement_type, bk_length, existence_based,simple_log_char_1,multiset_log)
 
 print("%s ---len %d---cd %0.3f---td %0.3f" % (bk_type, bk_length, cd, td))

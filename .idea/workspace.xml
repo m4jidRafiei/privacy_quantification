@@ -20,18 +20,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="cf3795dc-cb95-47ea-8613-f38fa860f5f9" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/aws.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/privacy_quatification.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/privacy_quatification.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/lib/p_privacy_qt/EMD.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/lib/p_privacy_qt/SMS.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/lib/p_privacy_qt/__init__.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/p_privacy_qt-0.0.3-py3-none-any.whl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/p_privacy_qt-0.0.3.tar.gz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/main_risk.py" beforeDir="false" afterPath="$PROJECT_DIR$/main_risk.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main_utility.py" beforeDir="false" afterPath="$PROJECT_DIR$/main_utility.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/p_privacy_qt/SMS.py" beforeDir="false" afterPath="$PROJECT_DIR$/p_privacy_qt/SMS.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/p_privacy_qt/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/p_privacy_qt/__init__.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -39,9 +31,10 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="Git.Settings">
-    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/../PPDP-PM" />
   </component>
   <component name="ProjectId" id="1lL5gTReW7lyMZ5dztRWQ8iFXDW" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
@@ -49,7 +42,7 @@
   <component name="PropertiesComponent">
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../PPDP-PM" />
     <property name="settings.editor.selected.configurable" value="configurable.group.appearance" />
   </component>
   <component name="RunManager" selected="Python.main_risk">
@@ -125,37 +118,41 @@
     </option>
   </component>
   <component name="WindowStateProjectService">
-    <state width="1259" height="166" key="GridCell.Tab.0.bottom" timestamp="1607368754785">
+    <state x="422" y="100" key="FileChooserDialogImpl" timestamp="1607372132214">
       <screen x="0" y="0" width="1280" height="690" />
     </state>
-    <state width="1259" height="166" key="GridCell.Tab.0.bottom/0.0.1280.690@0.0.1280.690" timestamp="1607368754785" />
-    <state width="1259" height="166" key="GridCell.Tab.0.center" timestamp="1607368754785">
+    <state x="422" y="100" key="FileChooserDialogImpl/0.0.1280.690@0.0.1280.690" timestamp="1607372132214" />
+    <state width="1259" height="132" key="GridCell.Tab.0.bottom" timestamp="1607376419544">
       <screen x="0" y="0" width="1280" height="690" />
     </state>
-    <state width="1259" height="166" key="GridCell.Tab.0.center/0.0.1280.690@0.0.1280.690" timestamp="1607368754785" />
-    <state width="1259" height="166" key="GridCell.Tab.0.left" timestamp="1607368754785">
+    <state width="1259" height="132" key="GridCell.Tab.0.bottom/0.0.1280.690@0.0.1280.690" timestamp="1607376419544" />
+    <state width="1259" height="132" key="GridCell.Tab.0.center" timestamp="1607376419544">
       <screen x="0" y="0" width="1280" height="690" />
     </state>
-    <state width="1259" height="166" key="GridCell.Tab.0.left/0.0.1280.690@0.0.1280.690" timestamp="1607368754785" />
-    <state width="1259" height="166" key="GridCell.Tab.0.right" timestamp="1607368754785">
+    <state width="1259" height="132" key="GridCell.Tab.0.center/0.0.1280.690@0.0.1280.690" timestamp="1607376419544" />
+    <state width="1259" height="132" key="GridCell.Tab.0.left" timestamp="1607376419544">
       <screen x="0" y="0" width="1280" height="690" />
     </state>
-    <state width="1259" height="166" key="GridCell.Tab.0.right/0.0.1280.690@0.0.1280.690" timestamp="1607368754785" />
-    <state width="1259" height="132" key="GridCell.Tab.1.bottom" timestamp="1607367472889">
+    <state width="1259" height="132" key="GridCell.Tab.0.left/0.0.1280.690@0.0.1280.690" timestamp="1607376419544" />
+    <state width="1259" height="132" key="GridCell.Tab.0.right" timestamp="1607376419544">
       <screen x="0" y="0" width="1280" height="690" />
     </state>
-    <state width="1259" height="132" key="GridCell.Tab.1.bottom/0.0.1280.690@0.0.1280.690" timestamp="1607367472889" />
-    <state width="1259" height="132" key="GridCell.Tab.1.center" timestamp="1607367472889">
+    <state width="1259" height="132" key="GridCell.Tab.0.right/0.0.1280.690@0.0.1280.690" timestamp="1607376419544" />
+    <state width="1259" height="132" key="GridCell.Tab.1.bottom" timestamp="1607376419544">
       <screen x="0" y="0" width="1280" height="690" />
     </state>
-    <state width="1259" height="132" key="GridCell.Tab.1.center/0.0.1280.690@0.0.1280.690" timestamp="1607367472889" />
-    <state width="1259" height="132" key="GridCell.Tab.1.left" timestamp="1607367472889">
+    <state width="1259" height="132" key="GridCell.Tab.1.bottom/0.0.1280.690@0.0.1280.690" timestamp="1607376419544" />
+    <state width="1259" height="132" key="GridCell.Tab.1.center" timestamp="1607376419544">
       <screen x="0" y="0" width="1280" height="690" />
     </state>
-    <state width="1259" height="132" key="GridCell.Tab.1.left/0.0.1280.690@0.0.1280.690" timestamp="1607367472889" />
-    <state width="1259" height="132" key="GridCell.Tab.1.right" timestamp="1607367472889">
+    <state width="1259" height="132" key="GridCell.Tab.1.center/0.0.1280.690@0.0.1280.690" timestamp="1607376419544" />
+    <state width="1259" height="132" key="GridCell.Tab.1.left" timestamp="1607376419544">
       <screen x="0" y="0" width="1280" height="690" />
     </state>
-    <state width="1259" height="132" key="GridCell.Tab.1.right/0.0.1280.690@0.0.1280.690" timestamp="1607367472889" />
+    <state width="1259" height="132" key="GridCell.Tab.1.left/0.0.1280.690@0.0.1280.690" timestamp="1607376419544" />
+    <state width="1259" height="132" key="GridCell.Tab.1.right" timestamp="1607376419544">
+      <screen x="0" y="0" width="1280" height="690" />
+    </state>
+    <state width="1259" height="132" key="GridCell.Tab.1.right/0.0.1280.690@0.0.1280.690" timestamp="1607376419544" />
   </component>
 </project>

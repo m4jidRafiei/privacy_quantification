@@ -318,9 +318,9 @@ class SMS: #Set-Multiset-Sequence calculator
                     sub_mults.append(item)
         return sub_mults
 
-    def disclosure_calc(self, bk_type, uniq_act,measurement_type, file_name, bk_length, existence_based, simple_log, multiset_log):
+    def disclosure_calc(self, bk_type, uniq_act,measurement_type, bk_length, existence_based, simple_log, multiset_log):
 
-        f = open(file_name, "a")
+        # f = open(file_name, "a")
 
         sum_uniq = 0
         cd = 0
@@ -384,8 +384,8 @@ class SMS: #Set-Multiset-Sequence calculator
                 else:
                     td = 0
 
-            f.write("set,len,%d,cd,%0.3f,td,%0.3f\n" % (bk_length, cd, td))
-            f.close()
+            # f.write("set,len,%d,cd,%0.3f,td,%0.3f\n" % (bk_length, cd, td))
+            # f.close()
 
         elif bk_type == "multiset":
             for counter, sub_mult in enumerate(cand_multiset):
@@ -426,8 +426,8 @@ class SMS: #Set-Multiset-Sequence calculator
                 else:
                     td = 0
 
-            f.write("mult,len,%d,cd,%0.3f,td,%0.3f\n" % (bk_length, cd, td))
-            f.close()
+            # f.write("mult,len,%d,cd,%0.3f,td,%0.3f\n" % (bk_length, cd, td))
+            # f.close()
 
 
         elif bk_type == "sequence":
@@ -471,7 +471,7 @@ class SMS: #Set-Multiset-Sequence calculator
                 else:
                     td = 0
 
-            f.write("seq,len,%d,cd,%0.3f,td,%0.3f\n" % (bk_length, cd, td))
-            f.close()
+            # f.write("seq,len,%d,cd,%0.3f,td,%0.3f\n" % (bk_length, cd, td))
+            # f.close()
 
         return cd, td
