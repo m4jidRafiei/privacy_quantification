@@ -85,6 +85,8 @@ class EMD:
         #     len(log_only_freq_2).pop()
         #     log_freq_2.pop()
         cost_lp = emd(log_only_freq_1, log_only_freq_2, array)
+        if cost_lp > 1:
+            cost_lp = 1
         return cost_lp
 
 

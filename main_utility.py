@@ -47,4 +47,4 @@ cost_lp = my_emd.emd_distance_pyemd(log_only_freq_1,log_only_freq_2,log_freq_1,l
 # cost_lp = my_emd.emd_distance(log_freq_1,log_freq_2)
 
 data_utility = 1 - cost_lp
-print("data_utility---%0.3f" %(data_utility))
+print("data_utility# %0.3f" %(data_utility))
