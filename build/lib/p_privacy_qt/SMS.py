@@ -37,13 +37,13 @@ class SMS: #Set-Multiset-Sequence calculator
         act_list = chain.from_iterable(iter)
         return set(act_list)
 
-    def map_act_char(self, traces):
+    def map_act_char(self, traces, offset):
         uniq_act = self.get_unique_act(traces)
         map_dict_act_chr = {}
         map_dict_chr_act = {}
         for index, item in enumerate(uniq_act):
-            map_dict_act_chr[item] = chr(index)
-            map_dict_chr_act[chr(index)] = item
+            map_dict_act_chr[item] = chr(index+offset)
+            map_dict_chr_act[chr(index+offset)] = item
 
         return map_dict_act_chr, map_dict_chr_act
 
