@@ -4,7 +4,7 @@ import time
 
 
 existence_based =  True  #it is faster when there is no super long traces in the event log
-measurement_type = "average"  #average or worst_case
+measurement_type = "worst_case"  #average or worst_case
 sensitive = []
 #is needed only when time is included in the event_attributes
 time_accuracy = "hours" # original, seconds, minutes, hours, days
@@ -14,7 +14,7 @@ life_cycle = ['complete', '', 'COMPLETE']
 #when life cycle is in trace attributes then all_life_cycle has to be True
 all_life_cycle = True
 
-event_log = "./event_logs/Sepsis Cases - Event Log.xes"
+event_log = "./event_logs/running_example.xes"
 log = xes_importer_factory.apply(event_log)
 
 bk_type = 'set' #set,multiset,sequence

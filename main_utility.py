@@ -24,14 +24,14 @@ logsimple, traces, sensitives = sms.create_simple_log_adv(original_log,event_att
 logsimple_2, traces_2, sensitives_2 = sms.create_simple_log_adv(privacy_log,event_attributes,life_cycle,all_life_cycle,sensitive,time_accuracy)
 
 #log 1 convert to char
-map_dict_act_chr,map_dict_chr_act = sms.map_act_char(traces)
+map_dict_act_chr,map_dict_chr_act = sms.map_act_char(traces,0)
 simple_log_char_1 = sms.convert_simple_log_act_to_char(traces,map_dict_act_chr)
 
 #log 2 convert to char
 if from_same_origin: #use the same mapping
     simple_log_char_2 = sms.convert_simple_log_act_to_char(traces_2,map_dict_act_chr)
 else:
-    map_dict_act_chr_2,map_dict_chr_act_2 = sms.map_act_char(traces_2)
+    map_dict_act_chr_2,map_dict_chr_act_2 = sms.map_act_char(traces_2,len(traces)+2)
     simple_log_char_2 = sms.convert_simple_log_act_to_char(traces_2,map_dict_act_chr_2)
 
 start_time = time.time()
