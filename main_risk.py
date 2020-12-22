@@ -24,7 +24,7 @@ sms = SMS()
 # simple_log = sms.create_simple_log(log,["concept:name", "lifecycle:transition"])
 logsimple, traces, sensitives = sms.create_simple_log_adv(log,event_attributes,life_cycle,all_life_cycle,sensitive,time_accuracy)
 
-map_dict_act_chr,map_dict_chr_act = sms.map_act_char(traces)
+map_dict_act_chr,map_dict_chr_act = sms.map_act_char(traces,0)
 simple_log_char_1 = sms.convert_simple_log_act_to_char(traces,map_dict_act_chr)
 
 sms.set_simple_log(simple_log_char_1)
