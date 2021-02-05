@@ -17,22 +17,21 @@ original_event_log = "./event_logs/" + "Sepsis Cases - Event Log.xes"
 privacy_aware_log = "./event_logs/"+ "Sepsis Cases - Event Log.xes"
 original_log = xes_importer_factory.apply(original_event_log)
 privacy_log = xes_importer_factory.apply(privacy_aware_log)
-from_same_origin = True #when both event logs drived from the same original event logs
 
 sms = SMS()
-logsimple, traces, sensitives = sms.create_simple_log_adv(original_log,event_attributes,life_cycle,all_life_cycle,sensitive,time_accuracy)
-logsimple_2, traces_2, sensitives_2 = sms.create_simple_log_adv(privacy_log,event_attributes,life_cycle,all_life_cycle,sensitive,time_accuracy)
+logsimple, traces, sensitives, df = sms.create_simple_log_adv(original_log,event_attributes,life_cycle,all_life_cycle,sensitive,time_accuracy,0,0)
+logsimple_2, traces_2, sensitives_2, df_2 = sms.create_simple_log_adv(privacy_log,event_attributes,life_cycle,all_life_cycle,sensitive,time_accuracy,0,0)
+
+activities1 = sms.get_unique_act(traces)
+activities2 = sms.get_unique_act(traces_2)
+uniq_activities = activities2.union(activities1)
+map_dict_act_chr,map_dict_chr_act, uniq_char = sms.map_act_char(uniq_activities)
 
 #log 1 convert to char
-map_dict_act_chr,map_dict_chr_act = sms.map_act_char(traces,0)
-simple_log_char_1 = sms.convert_simple_log_act_to_char(traces,map_dict_act_chr)
+simple_log_char_1, traces_char_1 = sms.convert_simple_log_act_to_char(logsimple,map_dict_act_chr)
 
 #log 2 convert to char
-if from_same_origin: #use the same mapping
-    simple_log_char_2 = sms.convert_simple_log_act_to_char(traces_2,map_dict_act_chr)
-else:
-    map_dict_act_chr_2,map_dict_chr_act_2 = sms.map_act_char(traces_2,len(traces)+2)
-    simple_log_char_2 = sms.convert_simple_log_act_to_char(traces_2,map_dict_act_chr_2)
+simple_log_char_2, traces_char_2 = sms.convert_simple_log_act_to_char(logsimple_2, map_dict_act_chr)
 
 start_time = time.time()
 
@@ -40,8 +39,8 @@ my_emd = EMD()
 # log_freq_1, log_only_freq_1 = my_emd.log_freq(traces)
 # log_freq_2 , log_only_freq_2 = my_emd.log_freq(traces_2)
 
-log_freq_1, log_only_freq_1 = my_emd.log_freq(simple_log_char_1)
-log_freq_2 , log_only_freq_2 = my_emd.log_freq(simple_log_char_2)
+log_freq_1, log_only_freq_1 = my_emd.log_freq(traces_char_1)
+log_freq_2 , log_only_freq_2 = my_emd.log_freq(traces_char_2)
 
 cost_lp = my_emd.emd_distance_pyemd(log_only_freq_1,log_only_freq_2,log_freq_1,log_freq_2)
 # cost_lp = my_emd.emd_distance(log_freq_1,log_freq_2)
