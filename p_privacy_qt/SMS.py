@@ -1,4 +1,6 @@
 import itertools
+import os
+
 import numpy as np
 from itertools import chain
 from collections import Counter
@@ -358,17 +360,45 @@ class SMS:  # Set-Multiset-Sequence calculator
                 seq.append(item)
         return seq
 
-    def get_sub_seq(self, simple_log, length):
+    def get_sub_seq(self, simple_log, length, multiprocess=True):
+        if multiprocess:
+            pool = mp.Pool()
+            workers = []
+            workers_number = os.cpu_count()
+            data_chunks = self.chunkIt(simple_log, workers_number)
+            results = []
+            for worker in range(workers_number):
+                print("Subsequence founder: In worker %d out of %d" % (worker + 1, workers_number))
+                workers.append(pool.apply_async(self.foo_worker_subseq_without_q, args=(
+                data_chunks[worker], length)))
+            for work in workers:
+                results += work.get()
+            pool.close()
+            pool.join()
+
+            return list(set(results))
+
+        else:
+            sub_seqs = self.foo_worker_subseq_without_q(simple_log,length)
+            return list(set(sub_seqs))
+
+    def foo_worker_subseq_without_q(self,data,length):
         sub_seqs = []
-        for item in simple_log:
+        for item in data:
             indexes = [i for i in range(len(item))]
             sub_indexes = self.find_subsets(indexes, length)
             for sub_index in sub_indexes:
                 list_sub_index = sorted(list(sub_index))
                 sub_seq = [item[index] for index in list_sub_index]
-                if sub_seq not in sub_seqs:
-                    sub_seqs.append(sub_seq)
+                sub_seqs.append(tuple(sub_seq))
         return sub_seqs
+
+    def all_subsequences(self,s):
+        out = set()
+        for r in range(1, len(s) + 1):
+            for c in itertools.combinations(s, r):
+                out.add(''.join(c))
+        return out
 
     def get_sub_seq_t(self, simple_log, length):
         sub_seqs = []
@@ -401,7 +431,7 @@ class SMS:  # Set-Multiset-Sequence calculator
         return out
 
     def disclosure_calc(self, bk_type, uniq_act, measurement_type, bk_length, existence_based, mult_log, tuple_log,
-                        traces_char, simple_log_char, multiprocess=True):
+                        traces_char, simple_log_char, multiprocess=True, mp_technique='pool'):
 
         sum_uniq = 0
         zeros = 0
@@ -414,11 +444,11 @@ class SMS:  # Set-Multiset-Sequence calculator
         result_dict = {}
 
         if (bk_type == "multiset") and existence_based:
-            cand_seq = self.get_sub_seq(traces_char, bk_length)
+            cand_seq = self.get_sub_seq(traces_char, bk_length, multiprocess=multiprocess)
             candidates, len_candidates = self.get_multiset_of_sequences(cand_seq)
 
         elif (bk_type == "sequence") and existence_based:
-            candidates = self.get_sub_seq(traces_char, bk_length)
+            candidates = self.get_sub_seq(traces_char, bk_length, multiprocess= multiprocess)
             len_candidates = len(candidates)
 
         elif (bk_type == "multiset") and not existence_based:
@@ -435,23 +465,41 @@ class SMS:  # Set-Multiset-Sequence calculator
             candidates = self.find_subsets(uniq_act, bk_length)
             len_candidates = len(candidates)
 
+        print("Candidates size %d" %(len_candidates))
 
         if multiprocess == True:
-            workers = int(len_candidates / 1000) + 1
-            data_chunks = self.chunkIt(candidates, workers)
-            mp.set_start_method('spawn')
-            jobs = []
-            results = []
-            for worker in range(workers):
-                print("In worker %d out of %d" % (worker + 1, workers))
-                q = mp.Queue()
-                p = mp.Process(target=self.foo_worker,
-                               args=(q, data_chunks[worker], tuple_log, mult_log, simple_log_char, bk_length, unique_match, bk_type))
-                jobs.append(p)
-                p.start()
-                results.append(q.get())
-            for job in jobs:
-                job.join()
+
+            if mp_technique == "queue":
+                workers_number = os.cpu_count()
+                data_chunks = self.chunkIt(candidates, workers_number)
+                mp.set_start_method('spawn')
+                jobs = []
+                results = []
+                for worker in range(workers_number):
+                    print("In worker %d out of %d" % (worker + 1, workers_number))
+                    q = mp.Queue()
+                    p = mp.Process(target=self.foo_worker,
+                                   args=(q, data_chunks[worker], tuple_log, mult_log, simple_log_char, bk_length, unique_match, bk_type))
+                    jobs.append(p)
+                    p.start()
+                    results.append(q.get())
+                for job in jobs:
+                    job.join()
+
+
+            elif mp_technique == "pool":
+                pool = mp.Pool()
+                workers = []
+                workers_number = os.cpu_count()
+                data_chunks = self.chunkIt(candidates, workers_number)
+                results = []
+                for worker in range(workers_number):
+                    print("In worker %d out of %d" % (worker + 1, workers_number))
+                    workers.append(pool.apply_async(self.foo_worker_without_q, args=(data_chunks[worker], tuple_log, mult_log, simple_log_char, bk_length, unique_match, bk_type)))
+                for work in workers:
+                    results.append(work.get())
+                pool.close()
+                pool.join()
 
             for result in results:
                 for key, value in result.items():
@@ -486,6 +534,11 @@ class SMS:  # Set-Multiset-Sequence calculator
     def foo_worker(self, q, candidates, tuple_log, mult_log, simple_log_char, bk_length, unique_match, bk_type):
         result_dict = self.intermediate_calculator(candidates, tuple_log, mult_log, simple_log_char, bk_length, unique_match, bk_type)
         q.put(result_dict)
+
+    def foo_worker_without_q(self, candidates, tuple_log, mult_log, simple_log_char, bk_length, unique_match, bk_type):
+        result_dict = self.intermediate_calculator(candidates, tuple_log, mult_log, simple_log_char, bk_length,
+                                                   unique_match, bk_type)
+        return result_dict
 
     def intermediate_calculator(self, candidates, tuple_log, mult_log, simple_log_char, bk_length, unique_match, bk_type):
         len_cand = len(candidates)
