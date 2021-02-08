@@ -17,12 +17,11 @@ if __name__ == '__main__':
     bk_length = 3  # int
     multiprocess = True
     mp_technique = 'pool'  # pool or queue (pool is always faster!)
-
     sms = SMS()
-    logsimple, traces, sensitives, df = sms.create_simple_log_adv(log, event_attributes, life_cycle, all_life_cycle,
-                                                                  sensitive, time_accuracy, 0, 0)
+
     start = datetime.now()
-    cd, td, ad = sms.calc(logsimple, traces, bk_type, measurement_type, bk_length, existence_based, multiprocess=multiprocess, mp_technique=mp_technique )
+    cd, td, ad = sms.calc(log, event_attributes, life_cycle, all_life_cycle, sensitive, time_accuracy,
+                          bk_type, measurement_type, bk_length, existence_based, multiprocess=multiprocess, mp_technique=mp_technique )
 
     end = datetime.now() - start
     print("%s ---len %d---cd %0.3f---td %0.3f---ad %0.3f" % (bk_type, bk_length, cd, td, ad))

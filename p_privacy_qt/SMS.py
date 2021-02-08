@@ -627,7 +627,11 @@ class SMS:  # Set-Multiset-Sequence calculator
 
         return cd, td, ad
 
-    def calc(self, logsimple, traces, bk_type, measurement_type, bk_length, existence_based, multiprocess=True, mp_technique='pool'):
+    def calc(self, log, event_attributes, life_cycle, all_life_cycle, sensitive, time_accuracy, bk_type, measurement_type,
+             bk_length, existence_based, multiprocess=True, mp_technique='pool'):
+
+        logsimple, traces, sensitives, df = self.create_simple_log_adv(log, event_attributes, life_cycle, all_life_cycle,
+                                                                      sensitive, time_accuracy, 0, 0)
         uniq_activities = self.get_unique_act(traces)
         map_dict_act_chr, map_dict_chr_act, uniq_char = self.map_act_char(uniq_activities)
         simple_log_char, traces_char = self.convert_simple_log_act_to_char(logsimple, map_dict_act_chr)
