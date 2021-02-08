@@ -1,5 +1,6 @@
 import itertools
 import os
+import sys
 
 import numpy as np
 from itertools import chain
@@ -442,6 +443,8 @@ class SMS:  # Set-Multiset-Sequence calculator
         ent_list_att = []
         ent_list_trace = []
         result_dict = {}
+        candidates = []
+        len_candidates = 0
 
         if (bk_type == "multiset") and existence_based:
             cand_seq = self.get_sub_seq(traces_char, bk_length, multiprocess=multiprocess)
@@ -468,13 +471,12 @@ class SMS:  # Set-Multiset-Sequence calculator
         print("Candidates size %d" %(len_candidates))
 
         if multiprocess == True:
-
+            results = []
             if mp_technique == "queue":
                 workers_number = os.cpu_count()
                 data_chunks = self.chunkIt(candidates, workers_number)
                 mp.set_start_method('spawn')
                 jobs = []
-                results = []
                 for worker in range(workers_number):
                     print("In worker %d out of %d" % (worker + 1, workers_number))
                     q = mp.Queue()
@@ -486,13 +488,11 @@ class SMS:  # Set-Multiset-Sequence calculator
                 for job in jobs:
                     job.join()
 
-
             elif mp_technique == "pool":
                 pool = mp.Pool()
                 workers = []
                 workers_number = os.cpu_count()
                 data_chunks = self.chunkIt(candidates, workers_number)
-                results = []
                 for worker in range(workers_number):
                     print("In worker %d out of %d" % (worker + 1, workers_number))
                     workers.append(pool.apply_async(self.foo_worker_without_q, args=(data_chunks[worker], tuple_log, mult_log, simple_log_char, bk_length, unique_match, bk_type)))
@@ -500,6 +500,7 @@ class SMS:  # Set-Multiset-Sequence calculator
                     results.append(work.get())
                 pool.close()
                 pool.join()
+
 
             for result in results:
                 for key, value in result.items():
@@ -549,6 +550,8 @@ class SMS:  # Set-Multiset-Sequence calculator
         sum_ent_att = 0
         ent_list_att = []
         zeros = 0
+        sum = 0
+        matches = []
         for index, cand in enumerate(candidates):
             print("len %d --> in seq %d of %d" % (bk_length, index, len_cand))
             if bk_type == "sequence":
@@ -587,6 +590,9 @@ class SMS:  # Set-Multiset-Sequence calculator
         return result_dict
 
     def final_calculator(self, result_dict, measurement_type, len_mult):
+        cd = 0
+        td = 0
+        ad = 0
         if measurement_type == "average":
             if result_dict['sum_uniq'] == 0:
                 cd = 0
@@ -619,4 +625,18 @@ class SMS:  # Set-Multiset-Sequence calculator
             else:
                 ad = 0
 
+        return cd, td, ad
+
+    def calc(self, logsimple, traces, bk_type, measurement_type, bk_length, existence_based, multiprocess=True, mp_technique='pool'):
+        uniq_activities = self.get_unique_act(traces)
+        map_dict_act_chr, map_dict_chr_act, uniq_char = self.map_act_char(uniq_activities)
+        simple_log_char, traces_char = self.convert_simple_log_act_to_char(logsimple, map_dict_act_chr)
+        uniq_act = self.get_unique_elem(traces_char)
+        mult_log = self.get_multiset_log_n(simple_log_char)
+        tuple_log = self.get_tuple_event_log(simple_log_char)
+
+        cd, td, ad = self.disclosure_calc(bk_type, uniq_act, measurement_type, bk_length, existence_based, mult_log,
+                                         tuple_log,
+                                         traces_char, simple_log_char, multiprocess=multiprocess,
+                                         mp_technique=mp_technique)
         return cd, td, ad
