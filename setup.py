@@ -27,7 +27,7 @@ setuptools.setup(
         'pyemd==0.5.1',
         'pyfpgrowth==1.0',
         'numpy>=1.18.1',
-        'python_Levenshtein==0.12.0'
+        'python_Levenshtein>=0.12.0'
     ],
     project_urls={
         'Source': 'https://github.com/m4jidRafiei/privacy_quantification'

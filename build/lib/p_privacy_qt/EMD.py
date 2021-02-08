@@ -4,7 +4,8 @@ import pandas as pd
 from collections import Counter
 from Levenshtein import distance as levenshtein_distance
 from pyemd import emd, emd_with_flow
-
+from p_privacy_qt.SMS import SMS
+from pm4py.objects.log.importer.xes import factory as xes_importer_factory
 
 class EMD:
 
@@ -93,3 +94,34 @@ class EMD:
     def truncate(self,number, digits):
         stepper = 10.0 ** digits
         return math.trunc(stepper * number) / stepper
+
+    def data_utility(self, original_event_log, privacy_aware_log, event_attributes, life_cycle, all_life_cycle,
+                     sensitive, time_accuracy):
+
+        original_log = xes_importer_factory.apply(original_event_log)
+        privacy_log = xes_importer_factory.apply(privacy_aware_log)
+
+        sms = SMS()
+        logsimple, traces, sensitives, df = sms.create_simple_log_adv(original_log, event_attributes, life_cycle,
+                                                                      all_life_cycle, sensitive, time_accuracy, 0, 0)
+        logsimple_2, traces_2, sensitives_2, df_2 = sms.create_simple_log_adv(privacy_log, event_attributes, life_cycle,
+                                                                              all_life_cycle, sensitive, time_accuracy,
+                                                                              0, 0)
+
+        activities1 = sms.get_unique_act(traces)
+        activities2 = sms.get_unique_act(traces_2)
+        uniq_activities = activities2.union(activities1)
+        map_dict_act_chr, map_dict_chr_act, uniq_char = sms.map_act_char(uniq_activities)
+
+        # log 1 convert to char
+        simple_log_char_1, traces_char_1 = sms.convert_simple_log_act_to_char(logsimple, map_dict_act_chr)
+        # log 2 convert to char
+        simple_log_char_2, traces_char_2 = sms.convert_simple_log_act_to_char(logsimple_2, map_dict_act_chr)
+
+        log_freq_1, log_only_freq_1 = self.log_freq(traces_char_1)
+        log_freq_2, log_only_freq_2 = self.log_freq(traces_char_2)
+
+        cost_lp = self.emd_distance_pyemd(log_only_freq_1, log_only_freq_2, log_freq_1, log_freq_2)
+        # cost_lp = my_emd.emd_distance(log_freq_1,log_freq_2)
+
+        return 1 - cost_lp

@@ -19,10 +19,7 @@ if __name__ == '__main__':
     mp_technique = 'pool'  # pool or queue (pool is always faster!)
     sms = SMS()
 
-    start = datetime.now()
     cd, td, ad = sms.calc(log, event_attributes, life_cycle, all_life_cycle, sensitive, time_accuracy,
                           bk_type, measurement_type, bk_length, existence_based, multiprocess=multiprocess, mp_technique=mp_technique )
 
-    end = datetime.now() - start
     print("%s ---len %d---cd %0.3f---td %0.3f---ad %0.3f" % (bk_type, bk_length, cd, td, ad))
-    print(end)
