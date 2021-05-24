@@ -439,6 +439,7 @@ class SMS:  # Set-Multiset-Sequence calculator
         sum_ent_att = 0
         sum_ent_trace = 0
         unique_match = False
+        unique_match_case = []
         matches_list = []
         ent_list_att = []
         ent_list_trace = []
@@ -508,6 +509,8 @@ class SMS:  # Set-Multiset-Sequence calculator
                         sum_uniq += value
                     elif key == 'matches_list':
                         matches_list += value
+                    elif key == 'unique_match_case':
+                        unique_match_case += value
                     elif key == 'unique_match':
                         unique_match = unique_match or value
                     elif key == 'sum_ent_trace':
@@ -521,16 +524,21 @@ class SMS:  # Set-Multiset-Sequence calculator
                     elif key == 'zeros':
                         zeros += value
 
-            result_dict = {'sum_uniq': sum_uniq, 'matches_list': matches_list, 'sum_ent_trace': sum_ent_trace,
+            result_dict = {'sum_uniq': sum_uniq, 'matches_list': matches_list, 'sum_ent_trace': sum_ent_trace, 'unique_match_case': unique_match_case,
                            'zeros': zeros,
                            'ent_list_trace': ent_list_trace, 'sum_ent_att': sum_ent_att, 'ent_list_att': ent_list_att,
                            'unique_match': unique_match}
         else:
             result_dict = self.intermediate_calculator(candidates, tuple_log, mult_log, simple_log_char, bk_length, unique_match, bk_type)
 
-        cd, td, ad = self.final_calculator(result_dict, measurement_type, len_candidates)
+        cd, td, ad, uniq_matched_variants = self.final_calculator(result_dict, measurement_type, len_candidates)
 
-        return cd, td, ad
+        unique_matched_cases = []
+        for item in traces_char:
+            if item in uniq_matched_variants:
+                unique_matched_cases.append(item)
+
+        return cd, td, ad, unique_matched_cases
 
     def foo_worker(self, q, candidates, tuple_log, mult_log, simple_log_char, bk_length, unique_match, bk_type):
         result_dict = self.intermediate_calculator(candidates, tuple_log, mult_log, simple_log_char, bk_length, unique_match, bk_type)
@@ -552,6 +560,7 @@ class SMS:  # Set-Multiset-Sequence calculator
         zeros = 0
         sum = 0
         matches = []
+        unique_match_case = []
         for index, cand in enumerate(candidates):
             print("len %d --> in seq %d of %d" % (bk_length, index, len_cand))
             if bk_type == "sequence":
@@ -580,10 +589,11 @@ class SMS:  # Set-Multiset-Sequence calculator
 
                 elif sum == 1:
                     unique_match = True
+                    unique_match_case.append(matches)
             else:
                 zeros += 1
 
-        result_dict = {'sum_uniq': sum_uniq, 'matches_list': matches_list, 'sum_ent_trace': sum_ent_trace,
+        result_dict = {'sum_uniq': sum_uniq, 'matches_list': matches_list, 'sum_ent_trace': sum_ent_trace, 'unique_match_case': unique_match_case,
                        'zeros': zeros,
                        'ent_list_trace': ent_list_trace, 'sum_ent_att': sum_ent_att, 'ent_list_att': ent_list_att,
                        'unique_match': unique_match}
@@ -593,6 +603,8 @@ class SMS:  # Set-Multiset-Sequence calculator
         cd = 0
         td = 0
         ad = 0
+        unique_match_variants = set([''.join(item[0]['trace']) for item in result_dict['unique_match_case']])
+
         if measurement_type == "average":
             if result_dict['sum_uniq'] == 0:
                 cd = 0
@@ -625,7 +637,7 @@ class SMS:  # Set-Multiset-Sequence calculator
             else:
                 ad = 0
 
-        return cd, td, ad
+        return cd, td, ad, unique_match_variants
 
     def calc(self, log, event_attributes, life_cycle, all_life_cycle, sensitive, time_accuracy, bk_type, measurement_type,
              bk_length, existence_based, multiprocess=True, mp_technique='pool'):
@@ -639,8 +651,8 @@ class SMS:  # Set-Multiset-Sequence calculator
         mult_log = self.get_multiset_log_n(simple_log_char)
         tuple_log = self.get_tuple_event_log(simple_log_char)
 
-        cd, td, ad = self.disclosure_calc(bk_type, uniq_act, measurement_type, bk_length, existence_based, mult_log,
+        cd, td, ad, uniq_matched_cases = self.disclosure_calc(bk_type, uniq_act, measurement_type, bk_length, existence_based, mult_log,
                                          tuple_log,
                                          traces_char, simple_log_char, multiprocess=multiprocess,
                                          mp_technique=mp_technique)
-        return cd, td, ad
+        return cd, td, ad, uniq_matched_cases
